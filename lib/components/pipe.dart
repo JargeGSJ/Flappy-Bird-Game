@@ -1,3 +1,4 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 // import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -21,13 +22,16 @@ Pipe({
     // position = Vector2(0, 0);
     late double ratio = _pipeSprite.srcSize.y / _pipeSprite.srcSize.x;
     anchor = Anchor.topCenter;
-    const width = 80;
-    size = Vector2(width as double, width * ratio);
+    const width = 82.0;
+    size = Vector2(width, width * ratio);
     if(isFlipped){
       flipVertically();
     }
 
+    add(RectangleHitbox());
+
   }
+
 
   @override
   void render(Canvas canvas) {

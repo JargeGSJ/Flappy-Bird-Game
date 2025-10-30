@@ -1,10 +1,14 @@
 
 
 import 'package:flame/components.dart';
+import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flappy_dash_game/bloc/game/game_cubit.dart';
+import 'package:flappy_dash_game/components/hidden_coin.dart' show HiddenCoin;
 import 'package:flappy_dash_game/components/pipe.dart' show Pipe;
 
 
-class PipePair extends PositionComponent{
+
+class PipePair extends PositionComponent with FlameBlocReader<GameCubit, GameState>{
 
   PipePair({
     required super.position,
@@ -13,11 +17,12 @@ class PipePair extends PositionComponent{
   });
 
   final double gap;
-  final speed =150;
+  final speed =200;
 
   @override
   Future<void> onLoad() async {
-    super.onLoad();
+    await super.onLoad();
+    // debugMode = true;
 
     addAll(
       [
@@ -28,14 +33,27 @@ class PipePair extends PositionComponent{
         Pipe(
           isFlipped: true, 
           position: Vector2(0, -gap/2)
-        )
+        ),
+        HiddenCoin(
+          position: Vector2(0, 0)
+        ),
       ]
     );
   }
 
   @override
   void update(double dt) {
+    switch(bloc.state.currentPlayingState){
+
+      case PlayingState.none:
+      case PlayingState.paused:
+      case PlayingState.gameOver:
+        break;
+      case PlayingState.playing:
     position.x -= speed * dt;
+    break;
+    }
+
     super.update(dt);
   }
 
